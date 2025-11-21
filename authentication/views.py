@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic import View
+from django.conf import settings
 
 
 class HomePage(View):
@@ -30,3 +31,19 @@ class HomePage(View):
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+class SignupPageView(View):
+    template_name = 'authentication/signup.html'
+    form_class = forms.SignupForm
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect(settings.LOGIN_REDIRECT_URL)
+        return render(request, self.template_name, {'form': form})
