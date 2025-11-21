@@ -16,12 +16,23 @@ body {
     position: relative;
 }
 
-.banner-title {
+.banner-title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    white-space: nowrap;
+}
+
+.banner-title {
     margin: 0;
+}
+
+.banner-logo {
+    height: 40px;
 }
 
 .banner-nav {
