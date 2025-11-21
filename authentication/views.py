@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from . import forms
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
+
 
 def home(request):
     form = forms.LoginForm()
@@ -19,3 +20,8 @@ def home(request):
                 message = 'Identifiants invalides.'
     return render(
         request, 'authentication/home.html', context={'form': form, 'message': message})
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
