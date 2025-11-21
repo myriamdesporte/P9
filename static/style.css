@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.top-banner {
+    position: relative;
+    border-bottom: 2px solid black;
+    height: 80px;
+}
+
+.banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    position: relative;
+}
+
+.banner-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+.banner-nav {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.banner-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 25px;
+}
+
+.banner-nav a {
+    text-decoration: none;
+}
+
+.banner-nav a:hover {
+    text-decoration: underline;
+}
