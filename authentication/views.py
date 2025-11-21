@@ -1,13 +1,20 @@
 from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import login, authenticate, logout
+from django.views.generic import View
 
 
-def home(request):
-    form = forms.LoginForm()
-    message = ''
-    if request.method == 'POST':
-        form = forms.LoginForm(request.POST)
+class HomePage(View):
+    template_name = 'authentication/home.html'
+    form_class = forms.LoginForm
+
+    def get(self, request):
+        form = self.form_class()
+        message = ''
+        return render(request, self.template_name, context={'form': form, 'message': message})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
             user = authenticate(
                 username=form.cleaned_data['username'],
@@ -18,9 +25,7 @@ def home(request):
                 message = f'Bonjour, {user.username}! Vous êtes connecté.'
             else:
                 message = 'Identifiants invalides.'
-    return render(
-        request, 'authentication/home.html', context={'form': form, 'message': message})
-
+        return render(request, self.template_name, context={'form': form, 'message': message})
 
 def logout_user(request):
     logout(request)
