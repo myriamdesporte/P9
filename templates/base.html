@@ -17,10 +17,10 @@
             {% if user.is_authenticated %}
             <nav class="banner-nav">
                 <ul>
-                    <li><a href="{% url 'feed' %}">Flux</a></li>
-                    <li><a href="{% url 'feed' %}">Posts</a></li>
-                    <li><a href="{% url 'feed' %}">Abonnements</a></li>
-                    <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+                    <li><a href="{% url 'authentication:feed' %}">Flux</a></li>
+                    <li><a href="{% url 'authentication:feed' %}">Posts</a></li>
+                    <li><a href="{% url 'authentication:feed' %}">Abonnements</a></li>
+                    <li><a href="{% url 'authentication:logout' %}">Se déconnecter</a></li>
                 </ul>
             </nav>
             {% endif %}

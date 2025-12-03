@@ -11,7 +11,7 @@ class LoginPageView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('feed')
+            return redirect('authentication:feed')
         form = self.form_class()
         return render(request, self.template_name, context={'form': form, 'message': ''})
 
@@ -25,7 +25,7 @@ class LoginPageView(View):
             )
             if user is not None:
                 login(request, user)
-                return redirect('feed')  # redirection vers le flux
+                return redirect('authentication:feed')
             else:
                 message = 'Identifiants invalides.'
         return render(request, self.template_name, context={'form': form, 'message': message})
@@ -34,7 +34,7 @@ class LoginPageView(View):
 class LogoutPageView(View):
     def get(self, request):
         logout(request)
-        return redirect('login')
+        return redirect('authentication:login')
 
 # Signup view
 class SignupPageView(View):
@@ -50,13 +50,13 @@ class SignupPageView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('feed')
+            return redirect('authentication:feed')
         return render(request, self.template_name, {'form': form})
 
 # Feed view
 class FeedPageView(LoginRequiredMixin, View):
     template_name = 'authentication/feed.html'
-    login_url = 'login'
+    login_url = 'authentication:login'
 
     def get(self, request):
         return render(request, self.template_name)
