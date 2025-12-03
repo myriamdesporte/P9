@@ -1,12 +1,15 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: #fbf4ec;
+    color: #4A372C;
 }
 
 .top-banner {
     position: relative;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid #4A372C;
     height: 80px;
+    background-color: #fbf4ec;
 }
 
 .banner-content {
@@ -29,6 +32,7 @@ body {
 
 .banner-title {
     margin: 0;
+    color: #4A372C;
 }
 
 .banner-logo {
@@ -52,8 +56,98 @@ body {
 
 .banner-nav a {
     text-decoration: none;
+    color: #4A372C;
 }
 
 .banner-nav a:hover {
+    color: #907668;
     text-decoration: underline;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin: 40px auto;
+    max-width: 1000px;
+}
+
+.card {
+    flex: 1;
+    border: 1px solid #baaa9a;
+    padding: 40px;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e7dace;
+    border-radius: 8px;
+}
+
+.card-content {
+    text-align: center;
+    width: 100%;
+}
+
+.btn {
+    padding: 12px 24px;
+    margin: 10px 0;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    background-color: #ab8c75;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.2s, outline 0.2s;
+}
+
+.btn:hover,
+.btn:focus {
+    background-color: #907668;
+    outline: 3px solid #907668;
+    outline-offset: 2px;
+}
+
+.form-generic p {
+    margin: 15px 0;
+}
+
+.form-generic label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+.form-generic input {
+    width: 100%;
+    padding: 15px 12px;
+    font-size: 1rem;
+    border: 1px solid #baaa9a;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: #fbf4ec;
+    color: #4A372C;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-generic input:focus {
+    outline: 3px solid #907668;
+    outline-offset: 2px;
+    border-color: #ab8c75;
+    box-shadow: 0 0 0 3px rgba(171, 140, 117, 0.15);
+}
+
+.form-generic input::placeholder {
+    color: #6C5A4E;
+    opacity: 1;
+}
+
+.form-message {
+    color: red;
+    margin-top: 10px;
 }
