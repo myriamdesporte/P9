@@ -1,21 +1,23 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic import View
-from django.conf import settings
 
-
-class HomePage(View):
-    template_name = 'authentication/home.html'
+# Login view
+class LoginPageView(View):
+    template_name = 'authentication/login.html'
     form_class = forms.LoginForm
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('feed')
         form = self.form_class()
-        message = ''
-        return render(request, self.template_name, context={'form': form, 'message': message})
+        return render(request, self.template_name, context={'form': form, 'message': ''})
 
     def post(self, request):
         form = self.form_class(request.POST)
+        message = ''
         if form.is_valid():
             user = authenticate(
                 username=form.cleaned_data['username'],
@@ -23,15 +25,18 @@ class HomePage(View):
             )
             if user is not None:
                 login(request, user)
-                message = f'Bonjour, {user.username}! Vous êtes connecté.'
+                return redirect('feed')  # redirection vers le flux
             else:
                 message = 'Identifiants invalides.'
         return render(request, self.template_name, context={'form': form, 'message': message})
 
-def logout_user(request):
-    logout(request)
-    return redirect('home')
+# Logout view
+class LogoutPageView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('login')
 
+# Signup view
 class SignupPageView(View):
     template_name = 'authentication/signup.html'
     form_class = forms.SignupForm
@@ -45,5 +50,13 @@ class SignupPageView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            return redirect('feed')
         return render(request, self.template_name, {'form': form})
+
+# Feed view
+class FeedPageView(LoginRequiredMixin, View):
+    template_name = 'authentication/feed.html'
+    login_url = 'login'
+
+    def get(self, request):
+        return render(request, self.template_name)
