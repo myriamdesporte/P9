@@ -17,9 +17,9 @@
             {% if user.is_authenticated %}
             <nav class="banner-nav">
                 <ul>
-                    <li><a href="{% url 'authentication:feed' %}">Flux</a></li>
-                    <li><a href="{% url 'authentication:feed' %}">Posts</a></li>
-                    <li><a href="{% url 'authentication:feed' %}">Abonnements</a></li>
+                    <li><a href="{% url 'reviews:feed' %}">Flux</a></li>
+                    <li><a href="{% url 'reviews:feed' %}">Posts</a></li>
+                    <li><a href="{% url 'reviews:feed' %}">Abonnements</a></li>
                     <li><a href="{% url 'authentication:logout' %}">Se déconnecter</a></li>
                 </ul>
             </nav>

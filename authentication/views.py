@@ -11,7 +11,7 @@ class LoginPageView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('authentication:feed')
+            return redirect('reviews:feed')
         form = self.form_class()
         return render(request, self.template_name, context={'form': form, 'message': ''})
 
@@ -25,7 +25,7 @@ class LoginPageView(View):
             )
             if user is not None:
                 login(request, user)
-                return redirect('authentication:feed')
+                return redirect('reviews:feed')
             else:
                 message = 'Identifiants invalides.'
         return render(request, self.template_name, context={'form': form, 'message': message})
@@ -50,7 +50,7 @@ class SignupPageView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('authentication:feed')
+            return redirect('reviews:feed')
         return render(request, self.template_name, {'form': form})
 
 # Feed view
