@@ -158,3 +158,56 @@ body {
     gap: 50px;
     margin: 40px 0;
 }
+
+.form-card .form-field label {
+    display: block;
+    text-align: left;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.form-card input[type="text"],
+.form-card textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #baaa9a;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.form-card textarea {
+    min-height: 120px;
+}
+
+.form-card input[type="file"] {
+    display: block;
+    text-align: left;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    background-color: #ab8c75;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, outline 0.2s;
+    margin-top: 4px;
+}
+
+.form-card input[type="file"]:hover,
+.form-card input[type="file"]:focus {
+    background-color: #907668;
+    outline: 3px solid #907668;
+    outline-offset: 2px;
+}
+
+.card-content h2.banner-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
