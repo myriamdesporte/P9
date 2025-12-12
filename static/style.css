@@ -151,3 +151,10 @@ body {
     color: red;
     margin-top: 10px;
 }
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 40px 0;
+}

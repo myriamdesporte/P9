@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="card-container">
-    <p>Page de flux</p>
+<div class="button-group">
+    <a href="{% url 'reviews:ticket-create' %}">
+        <button type="button" class="btn">Demander une critique</button>
+    </a>
+    <button type="button" class="btn">Créer une critique</button>
 </div>
 {% endblock content %}
