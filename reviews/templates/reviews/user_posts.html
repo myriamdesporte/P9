@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="page-title">Vos posts</h2>
+
+{% for ticket in tickets %}
+<div class="ticket-card">
+
+    <div class="ticket-header">
+        <p class="ticket-label">Vous avez publié un ticket</p>
+        <p class="ticket-date">{{ ticket.time_created|date:"H:i, d F Y" }}</p>
+    </div>
+
+    <p class="ticket-title">{{ ticket.title }}</p>
+    <p class="ticket-description">{{ ticket.description|linebreaksbr }}</p>
+
+    {% if ticket.image %}
+        <img src="{{ ticket.image.url }}" alt="image du ticket" class="ticket-image">
+    {% endif %}
+
+    <div class="ticket-actions">
+        <button type="button" class="btn">Modifier</button>
+        <button type="button" class="btn">Supprimer</button>
+    </div>
+
+</div>
+<hr>
+{% endfor %}
+{% endblock content %}
