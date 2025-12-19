@@ -27,7 +27,10 @@
                     {% endif %}
                 {% endfor %}
 
-                <button type="submit" class="btn">S’inscrire</button>
+                <div class="ticket-actions">
+                    <a href="{% url 'authentication:login' %}" class="btn">Retourner</a>
+                    <button type="submit" class="btn">S'inscrire</button>
+                </div>
             </form>
         </div>
     </div>
