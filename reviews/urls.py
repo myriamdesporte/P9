@@ -7,4 +7,6 @@ urlpatterns = [
     path('', views.FeedPageView.as_view(), name='feed'),
     path('ticket/create/', views.TicketCreatePageView.as_view(), name='ticket-create'),
     path('posts/', views.UserPostsPageView.as_view(), name='user-posts'),
+    path('ticket/<int:id>/update/', views.TicketUpdatePageView.as_view(), name='ticket-update'),
+    path('ticket/<int:id>/delete/', views.TicketDeletePageView.as_view(), name='ticket-delete'),
 ]

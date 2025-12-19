@@ -19,8 +19,8 @@
     {% endif %}
 
     <div class="ticket-actions">
-        <button type="button" class="btn">Modifier</button>
-        <button type="button" class="btn">Supprimer</button>
+        <a href="{% url 'reviews:ticket-update' ticket.id %}" class="btn">Modifier</a>
+        <a href="{% url 'reviews:ticket-delete' ticket.id %}" class="btn">Supprimer</a>
     </div>
 
 </div>

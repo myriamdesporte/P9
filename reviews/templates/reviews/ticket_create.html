@@ -3,7 +3,9 @@
 <div class="card-container">
     <div class="card">
         <div class="card-content">
-            <h2 class="banner-title">Créer un ticket</h2>
+            <h2 class="banner-title">
+                {% if form.instance.id %}Modifier votre ticket{% else %}Créer un ticket{% endif %}
+            </h2>
 
             <form method="post" enctype="multipart/form-data" class="form-card">
                 {% csrf_token %}
@@ -26,7 +28,18 @@
 
                 <p class="form-field">
                     <label>Image</label>
+
+                    {% if form.instance.image %}
+                    <div class="image-preview-container">
+                        <img src="{{ form.instance.image.url }}" alt="Image actuelle" class="ticket-image">
+                        <label class="checkbox-label">
+                            {{ form.image.clear_checkbox }}
+                        </label>
+                    </div>
+                    {% endif %}
+
                     {{ form.image }}
+
                     {% for error in form.image.errors %}
                         <p class="form-message">{{ error }}</p>
                     {% endfor %}
