@@ -12,6 +12,7 @@ class FeedPageView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, self.template_name)
 
+
 class TicketCreatePageView(LoginRequiredMixin, View):
     template_name = 'reviews/ticket_create.html'
     login_url = 'authentication:login'
@@ -29,15 +30,21 @@ class TicketCreatePageView(LoginRequiredMixin, View):
             return redirect('reviews:user-posts')
         return render(request, self.template_name, {'form': form})
 
+
 class UserPostsPageView(LoginRequiredMixin, View):
     template_name = 'reviews/user_posts.html'
     login_url = 'authentication:login'
 
     def get(self, request):
-        user_tickets = Ticket.objects.filter(user=request.user).order_by('-time_created')
+        user_tickets = (
+            Ticket.objects
+            .filter(user=request.user)
+            .order_by('-time_created')
+        )
         return render(request, self.template_name, {
             'tickets': user_tickets
         })
+
 
 class TicketUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
     template_name = 'reviews/ticket_create.html'

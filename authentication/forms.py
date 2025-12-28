@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
@@ -13,6 +14,7 @@ class LoginForm(forms.Form):
             'placeholder': 'Mot de passe'
         })
     )
+
 
 class SignupForm(UserCreationForm):
     username = forms.CharField(

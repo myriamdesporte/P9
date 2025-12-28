@@ -4,6 +4,7 @@ from . import forms
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic import View
 
+
 # Login view
 class LoginPageView(View):
     template_name = 'authentication/login.html'
@@ -13,7 +14,14 @@ class LoginPageView(View):
         if request.user.is_authenticated:
             return redirect('reviews:feed')
         form = self.form_class()
-        return render(request, self.template_name, context={'form': form, 'message': ''})
+        return render(
+            request,
+            self.template_name,
+            context={
+                'form': form,
+                'message': ''
+            }
+        )
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -28,13 +36,22 @@ class LoginPageView(View):
                 return redirect('reviews:feed')
             else:
                 message = 'Identifiants invalides.'
-        return render(request, self.template_name, context={'form': form, 'message': message})
+        return render(
+            request,
+            self.template_name,
+            context={
+                'form': form,
+                'message': message
+            }
+        )
+
 
 # Logout view
 class LogoutPageView(View):
     def get(self, request):
         logout(request)
         return redirect('authentication:login')
+
 
 # Signup view
 class SignupPageView(View):
@@ -52,6 +69,7 @@ class SignupPageView(View):
             login(request, user)
             return redirect('reviews:feed')
         return render(request, self.template_name, {'form': form})
+
 
 # Feed view
 class FeedPageView(LoginRequiredMixin, View):
