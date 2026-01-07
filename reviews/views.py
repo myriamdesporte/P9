@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from reviews.forms import TicketForm
+from reviews.forms import TicketForm, ReviewForm
 from reviews.models import Ticket
 
 
@@ -90,3 +90,37 @@ class TicketDeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
         ticket = self.get_object()
         ticket.delete()
         return redirect('reviews:user-posts')
+
+
+class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
+    template_name = 'reviews/ticket_and_review_create.html'
+    login_url = 'authentication:login'
+
+    def get(self, request):
+        ticket_form = TicketForm()
+        review_form = ReviewForm()
+        return render(request, self.template_name, {
+            'ticket_form': ticket_form,
+            'review_form': review_form,
+        })
+
+    def post(self, request):
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+
+        if ticket_form.is_valid() and review_form.is_valid():
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+
+            review = review_form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket
+            review.save()
+
+            return redirect('reviews:user-posts')
+
+        return render(request, self.template_name, {
+            'ticket_form': ticket_form,
+            'review_form': review_form,
+        })

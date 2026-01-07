@@ -21,4 +21,9 @@ urlpatterns = [
         views.TicketDeletePageView.as_view(),
         name='ticket-delete'
     ),
+    path(
+        'ticket-review/create/',
+        views.TicketAndReviewCreatePageView.as_view(),
+        name='ticket-and-review-create'
+    ),
 ]

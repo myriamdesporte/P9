@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+
+    <div class="card-container">
+        <div class="card">
+            <div class="card-content">
+                <h2 class="banner-title">Créer une critique</h2>
+
+                <!-- Separation line -->
+                <hr class="section-separator">
+
+                <!-- Ticket section -->
+                <h3 class="banner-title">Livre/Article</h3>
+
+                <p class="form-field">
+                    <label>Titre</label>
+                    {{ ticket_form.title }}
+                    {% for error in ticket_form.title.errors %}
+                        <p class="form-message">{{ error }}</p>
+                    {% endfor %}
+                </p>
+
+                <p class="form-field">
+                    <label>Description</label>
+                    {{ ticket_form.description }}
+                    {% for error in ticket_form.description.errors %}
+                        <p class="form-message">{{ error }}</p>
+                    {% endfor %}
+                </p>
+
+                <p class="form-field">
+                    <label>Image</label>
+                    {% if ticket_form.instance.image %}
+                        <div class="image-preview-container">
+                            <img src="{{ ticket_form.instance.image.url }}" alt="Image actuelle" class="ticket-image">
+                            <label class="checkbox-label">
+                                {{ ticket_form.image.clear_checkbox }}
+                            </label>
+                        </div>
+                    {% endif %}
+                    {{ ticket_form.image }}
+                    {% for error in ticket_form.image.errors %}
+                        <p class="form-message">{{ error }}</p>
+                    {% endfor %}
+                </p>
+
+                <!-- Separation line -->
+                <hr class="section-separator">
+
+                <!-- Review section -->
+                <h3 class="banner-title">Critique</h3>
+
+                <p class="form-field">
+                    <label>Titre</label>
+                    {{ review_form.headline }}
+                    {% for error in review_form.headline.errors %}
+                        <p class="form-message">{{ error }}</p>
+                    {% endfor %}
+                </p>
+
+                <p class="form-field">
+                    <label>Note</label>
+                    <div class="field-rating">
+                        {% for radio in review_form.rating %}
+                            <label>
+                                {{ radio.tag }}
+                                {{ radio.choice_label }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    {% for error in review_form.rating.errors %}
+                        <p class="form-message">{{ error }}</p>
+                    {% endfor %}
+                </p>
+
+                <p class="form-field">
+                    <label>Commentaire</label>
+                    {{ review_form.body }}
+                    {% for error in review_form.body.errors %}
+                        <p class="form-message">{{ error }}</p>
+                    {% endfor %}
+                </p>
+
+                <!-- Submit button -->
+                <div class="form-submit">
+                    <button type="submit" class="btn">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock content %}
