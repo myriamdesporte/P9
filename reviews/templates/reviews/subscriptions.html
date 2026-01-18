@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="subscriptions-messages">
+    {% if messages %}
+        {% for message in messages %}
+            <p class="form-message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="subscription-container">
+    <div class="card">
+        <div class="card-content">
+            <h2 class="banner-title">Suivre d'autres utilisateurs</h2>
+            <form method="post" class="form-generic">
+                {% csrf_token %}
+                <div class="button-group">
+                    {{ form.username }}
+                    <button type="submit" class="btn">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="subscription-container">
+    <div class="card">
+        <div class="card-content">
+            <h2 class="banner-title">Abonnements</h2>
+            {% if request.user.following.all %}
+                <table class="subscriptions-table">
+                    <tbody>
+                        {% for followed in request.user.following.all %}
+                            <tr>
+                                <td class="subscription-username">{{ followed.followed_user.username }}</td>
+                                <td class="subscription-action">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="unfollow_user_id" value="{{ followed.followed_user.id }}">
+                                        <button type="submit" class="btn">Désabonner</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Vous n'êtes abonné à aucun utilisateur</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="subscription-container">
+    <div class="card">
+        <div class="card-content">
+            <h2 class="banner-title">Abonnés</h2>
+            {% if request.user.followed_by.all %}
+                <table class="subscriptions-table">
+                    <tbody>
+                        {% for follower in request.user.followed_by.all %}
+                            <tr>
+                                <td class="subscription-follower">{{ follower.user.username }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Vous n'avez pas encore d'abonné</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -26,4 +26,9 @@ urlpatterns = [
         views.TicketAndReviewCreatePageView.as_view(),
         name='ticket-and-review-create'
     ),
+    path(
+        'subscriptions/',
+        views.SubscriptionsPageView.as_view(),
+        name='subscriptions'
+    ),
 ]

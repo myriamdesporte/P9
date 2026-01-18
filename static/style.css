@@ -297,3 +297,70 @@ a.btn:active {
     border-top: 2px solid #baaa9a;
     margin: 30px 0;
 }
+
+.subscription-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin: 5px auto;
+    max-width: 1000px;
+}
+
+.subscriptions-messages {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1000px;
+    margin:30px auto 0 auto;
+}
+
+.subscriptions-messages .form-message {
+    color: #ab4a4a;
+}
+
+.subscriptions-table {
+    width: 100%;
+    border: 1px solid #ab8c75;
+    border-radius: 8px;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.subscriptions-table td {
+    border-bottom: 1px solid #ab8c75;
+    border-right: 1px solid #ab8c75;
+}
+
+.subscriptions-table td:last-child {
+    border-right: none;
+}
+
+.subscriptions-table tr:last-child td {
+    border-bottom: none;
+}
+
+.subscription-username {
+    width: 85%;
+    text-align: left;
+    padding-left: 8px;
+}
+
+.subscription-action {
+    width: 15%;
+    padding: 0;
+}
+
+.subscription-action .btn {
+    margin: 4px;
+}
+
+.subscription-follower {
+    text-align: left;
+    padding: 16px 8px ;
+}
+
+.subscription-message {
+    color: #ab4a4a;
+    margin-top: 10px;
+}

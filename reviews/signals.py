@@ -14,7 +14,6 @@ def delete_ticket_image(sender, instance, **kwargs):
 @receiver(pre_save, sender=Ticket)
 def delete_old_ticket_image(sender, instance, **kwargs):
     if not instance.pk:
-        # Nouveau ticket, rien à faire
         return
 
     try:

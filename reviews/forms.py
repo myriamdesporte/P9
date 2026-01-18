@@ -21,3 +21,12 @@ class ReviewForm(forms.ModelForm):
                 choices=[(i, str(i)) for i in range(6)]
             ),
         }
+
+
+class FollowUserForm(forms.Form):
+    username = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'placeholder': "Nom d'utilisateur",
+        })
+    )
