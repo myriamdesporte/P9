@@ -1,10 +1,12 @@
+from itertools import chain
+from django.db.models import CharField, Value
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from reviews.forms import TicketForm, ReviewForm, FollowUserForm
-from reviews.models import Ticket, UserFollows
+from reviews.models import Ticket, UserFollows, Review
 
 User = get_user_model()
 
@@ -13,8 +15,136 @@ class FeedPageView(LoginRequiredMixin, View):
     template_name = 'reviews/feed.html'
     login_url = 'authentication:login'
 
+    def get_users_viewable_tickets(self, user):
+        # User tickets
+        tickets = Ticket.objects.filter(user=user)
+
+        # Tickets from followed users
+        follows = UserFollows.objects.filter(user=user)
+        for follow in follows:
+            tickets = tickets | Ticket.objects.filter(
+                user=follow.followed_user
+            )
+
+        # Remove tickets with self-review
+        tickets_to_remove = Ticket.objects.none()
+        for ticket in tickets:
+            if Review.objects.filter(ticket=ticket, user=ticket.user).exists():
+                tickets_to_remove = tickets_to_remove | Ticket.objects.filter(
+                    pk=ticket.pk
+                )
+
+        tickets = tickets.exclude(
+            pk__in=tickets_to_remove.values_list('pk', flat=True)
+        )
+
+        return tickets
+
+    def get_users_viewable_reviews(self, user):
+        # User reviews
+        reviews = Review.objects.filter(user=user)
+
+        # Reviews from followed users
+        follows = UserFollows.objects.filter(user=user)
+        for follow in follows:
+            reviews = reviews | Review.objects.filter(
+                user=follow.followed_user
+            )
+
+        # Reviews on user's tickets
+        user_tickets = Ticket.objects.filter(user=user)
+        for ticket in user_tickets:
+            reviews = reviews | Review.objects.filter(ticket=ticket)
+
+        return reviews
+
     def get(self, request):
-        return render(request, self.template_name)
+        user = request.user
+
+        tickets = self.get_users_viewable_tickets(user)
+        tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+        reviews = self.get_users_viewable_reviews(user)
+        reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+        feed_items = sorted(
+            chain(reviews, tickets),
+            key=lambda item: item.time_created,
+            reverse=True
+        )
+
+        return render(request, self.template_name, {'feed_items': feed_items})
+
+
+class UserPostsPageView(LoginRequiredMixin, View):
+    template_name = 'reviews/user_posts.html'
+    login_url = 'authentication:login'
+
+    def get(self, request):
+        user_tickets = (
+            Ticket.objects
+            .filter(user=request.user)
+            .order_by('-time_created')
+        )
+        return render(request, self.template_name, {
+            'tickets': user_tickets
+        })
+
+
+class SubscriptionsPageView(LoginRequiredMixin, View):
+    template_name = 'reviews/subscriptions.html'
+    login_url = 'authentication:login'
+
+    def get(self, request):
+        form = FollowUserForm()
+        return render(request, self.template_name, {
+            'form': form,
+        })
+
+    def post(self, request):
+        if 'unfollow_user_id' in request.POST:
+            user_id = request.POST.get('unfollow_user_id')
+            try:
+                user_to_unfollow = User.objects.get(id=user_id)
+                UserFollows.objects.filter(
+                    user=request.user,
+                    followed_user=user_to_unfollow
+                ).delete()
+                messages.success(
+                    request,
+                    f"Vous ne suivez plus {user_to_unfollow.username}."
+                )
+            except User.DoesNotExist:
+                messages.error(request, "Utilisateur introuvable.")
+            return redirect('reviews:subscriptions')
+
+        form = FollowUserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+
+            try:
+                user_to_follow = User.objects.get(username=username)
+            except User.DoesNotExist:
+                messages.error(
+                    request,
+                    f"L'utilisateur '{username}' n'existe pas."
+                )
+                return render(request, self.template_name, {'form': form})
+
+            if user_to_follow == request.user:
+                messages.error(
+                    request,
+                    "Vous ne pouvez pas vous suivre vous-même."
+                )
+                return render(request, self.template_name, {'form': form})
+
+            UserFollows.objects.get_or_create(
+                user=request.user,
+                followed_user=user_to_follow
+            )
+            messages.success(request, f"Vous suivez maintenant {username}.")
+            return redirect('reviews:subscriptions')
+
+        return render(request, self.template_name, {'form': form})
 
 
 class TicketCreatePageView(LoginRequiredMixin, View):
@@ -33,21 +163,6 @@ class TicketCreatePageView(LoginRequiredMixin, View):
             ticket.save()
             return redirect('reviews:user-posts')
         return render(request, self.template_name, {'form': form})
-
-
-class UserPostsPageView(LoginRequiredMixin, View):
-    template_name = 'reviews/user_posts.html'
-    login_url = 'authentication:login'
-
-    def get(self, request):
-        user_tickets = (
-            Ticket.objects
-            .filter(user=request.user)
-            .order_by('-time_created')
-        )
-        return render(request, self.template_name, {
-            'tickets': user_tickets
-        })
 
 
 class TicketUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -128,60 +243,3 @@ class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
             'ticket_form': ticket_form,
             'review_form': review_form,
         })
-
-
-class SubscriptionsPageView(LoginRequiredMixin, View):
-    template_name = 'reviews/subscriptions.html'
-    login_url = 'authentication:login'
-
-    def get(self, request):
-        form = FollowUserForm()
-        return render(request, self.template_name, {
-            'form': form,
-        })
-
-    def post(self, request):
-        if 'unfollow_user_id' in request.POST:
-            user_id = request.POST.get('unfollow_user_id')
-            try:
-                user_to_unfollow = User.objects.get(id=user_id)
-                UserFollows.objects.filter(
-                    user=request.user,
-                    followed_user=user_to_unfollow
-                ).delete()
-                messages.success(
-                    request,
-                    f"Vous ne suivez plus {user_to_unfollow.username}."
-                )
-            except User.DoesNotExist:
-                messages.error(request, "Utilisateur introuvable.")
-            return redirect('reviews:subscriptions')
-
-        form = FollowUserForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-
-            try:
-                user_to_follow = User.objects.get(username=username)
-            except User.DoesNotExist:
-                messages.error(
-                    request,
-                    f"L'utilisateur '{username}' n'existe pas."
-                )
-                return render(request, self.template_name, {'form': form})
-
-            if user_to_follow == request.user:
-                messages.error(
-                    request,
-                    "Vous ne pouvez pas vous suivre vous-même."
-                )
-                return render(request, self.template_name, {'form': form})
-
-            UserFollows.objects.get_or_create(
-                user=request.user,
-                followed_user=user_to_follow
-            )
-            messages.success(request, f"Vous suivez maintenant {username}.")
-            return redirect('reviews:subscriptions')
-
-        return render(request, self.template_name, {'form': form})
