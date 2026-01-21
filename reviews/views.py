@@ -63,6 +63,12 @@ class FeedPageView(LoginRequiredMixin, View):
 
         tickets = self.get_users_viewable_tickets(user)
         tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+        # Mark tickets with reviews
+        for ticket in tickets:
+            ticket.has_review = Review.objects.filter(
+                ticket=ticket
+            ).exists()
+
         reviews = self.get_users_viewable_reviews(user)
         reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
@@ -251,3 +257,43 @@ class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
             'ticket_form': ticket_form,
             'review_form': review_form,
         })
+
+
+class ReviewCreatePageView(LoginRequiredMixin, View):
+    template_name = 'reviews/review_create.html'
+    login_url = 'authentication:login'
+
+    def get_ticket(self, id):
+        return get_object_or_404(Ticket, id=id)
+
+    def get(self, request, id):
+        ticket = self.get_ticket(id)
+        form = ReviewForm()
+        return render(
+            request,
+            self.template_name,
+            {
+                'ticket': ticket,
+                'form': form,
+            }
+        )
+
+    def post(self, request, id):
+        ticket = self.get_ticket(id)
+        form = ReviewForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket
+            review.save()
+            return redirect('reviews:feed')
+
+        return render(
+            request,
+            self.template_name,
+            {
+                'ticket': ticket,
+                'form': form,
+            }
+        )

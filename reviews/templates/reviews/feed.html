@@ -43,9 +43,11 @@
 
         {% if item.user != request.user and not item.has_review %}
         <div class="ticket-actions">
-            <button type="button" class="btn">
-                Créer une critique
-            </button>
+            <a href="{% url 'reviews:review-create' item.id %}">
+                <button type="button" class="btn">
+                    Créer une critique
+                </button>
+            </a>
         </div>
         {% endif %}
 
@@ -80,6 +82,8 @@
                 {% endif %}
             {% endfor %}
         </p>
+
+        <p>{{ item.body }}</p>
 
         <div class="ticket-card">
             <div class="ticket-header">

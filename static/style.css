@@ -364,3 +364,7 @@ a.btn:active {
     color: #ab4a4a;
     margin-top: 10px;
 }
+
+.card-content .ticket-card {
+    text-align: left;
+}
