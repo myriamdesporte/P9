@@ -80,14 +80,22 @@ class UserPostsPageView(LoginRequiredMixin, View):
     login_url = 'authentication:login'
 
     def get(self, request):
-        user_tickets = (
-            Ticket.objects
-            .filter(user=request.user)
-            .order_by('-time_created')
+        user_tickets = (Ticket.objects.filter(user=request.user))
+        tickets = user_tickets.annotate(
+            content_type=Value('TICKET', CharField())
         )
-        return render(request, self.template_name, {
-            'tickets': user_tickets
-        })
+        user_reviews = (Review.objects.filter(user=request.user))
+        reviews = user_reviews.annotate(
+            content_type=Value('REVIEW', CharField())
+        )
+
+        feed_items = sorted(
+            chain(reviews, tickets),
+            key=lambda item: item.time_created,
+            reverse=True
+        )
+
+        return render(request, self.template_name, {'feed_items': feed_items})
 
 
 class SubscriptionsPageView(LoginRequiredMixin, View):

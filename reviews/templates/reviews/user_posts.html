@@ -3,26 +3,90 @@
 {% block content %}
 <h2 class="page-title">Vos posts</h2>
 
-{% for ticket in tickets %}
-<div class="ticket-card">
+{% for item in feed_items %}
+    <!-- TICKETS -->
+    {% if item.content_type == 'TICKET' %}
+        <div class="ticket-card">
+            <div class="ticket-header">
+                <p class="ticket-label">Vous avez publié un ticket</p>
+                <p class="ticket-date">{{ item.time_created|date:"H:i, d F Y" }}</p>
+            </div>
 
-    <div class="ticket-header">
-        <p class="ticket-label">Vous avez publié un ticket</p>
-        <p class="ticket-date">{{ ticket.time_created|date:"H:i, d F Y" }}</p>
-    </div>
+            <p class="ticket-title">{{ item.title }}</p>
+            <p class="ticket-description">{{ item.description|linebreaksbr }}</p>
 
-    <p class="ticket-title">{{ ticket.title }}</p>
-    <p class="ticket-description">{{ ticket.description|linebreaksbr }}</p>
+            {% if item.image %}
+            <img src="{{ item.image.url }}" alt="image du ticket" class="ticket-image">
+            {% endif %}
 
-    {% if ticket.image %}
-        <img src="{{ ticket.image.url }}" alt="image du ticket" class="ticket-image">
+            <div class="ticket-actions">
+                <a href="{% url 'reviews:ticket-update' item.id %}" class="btn">Modifier</a>
+                <a href="{% url 'reviews:ticket-delete' item.id %}" class="btn">Supprimer</a>
+            </div>
+        </div>
     {% endif %}
 
-    <div class="ticket-actions">
-        <a href="{% url 'reviews:ticket-update' ticket.id %}" class="btn">Modifier</a>
-        <a href="{% url 'reviews:ticket-delete' ticket.id %}" class="btn">Supprimer</a>
-    </div>
+    <!-- REVIEWS -->
+    {% if item.content_type == 'REVIEW' %}
+        <div class="ticket-card">
 
-</div>
+            <div class="ticket-header">
+                <p class="ticket-label">
+                    {% if item.user == request.user %}
+                        Vous avez publié une critique
+                    {% else %}
+                        {{ item.user.username }} a publié une critique
+                    {% endif %}
+                </p>
+
+                <p class="ticket-date">
+                    {{ item.time_created|date:"H:i, d F Y" }}
+                </p>
+            </div>
+
+            <p>
+                <strong>{{ item.headline }}</strong> -
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= item.rating %}
+                        &#9733;
+                    {% else %}
+                        &#9734;
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            <div class="ticket-card">
+                <div class="ticket-header">
+                    <p class="ticket-label">
+                        Ticket –
+                        {% if item.ticket.user == request.user %}
+                            Vous
+                        {% else %}
+                            {{ item.ticket.user.username }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <p class="ticket-description">
+                    {{ item.ticket.title|linebreaksbr }}
+                </p>
+
+                <p class="ticket-description">
+                    {{ item.ticket.description|linebreaksbr }}
+                </p>
+
+                {% if item.ticket.image %}
+                    <img src="{{ item.ticket.image.url }}" alt="image du ticket" class="ticket-image">
+                {% endif %}
+            </div>
+            <div class="ticket-actions">
+                <a href="" class="btn">Modifier</a>
+                <a href="" class="btn">Supprimer</a>
+            </div>
+        </div>
+    {% endif %}
+
 {% endfor %}
+
+
 {% endblock content %}
