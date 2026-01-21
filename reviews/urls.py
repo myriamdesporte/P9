@@ -27,13 +27,23 @@ urlpatterns = [
         name='ticket-and-review-create'
     ),
     path(
-        'subscriptions/',
-        views.SubscriptionsPageView.as_view(),
-        name='subscriptions'
-    ),
-    path(
         'ticket/<int:id>/review/create/',
         views.ReviewCreatePageView.as_view(),
         name='review-create'
+    ),
+    path(
+        'review/<int:id>/update/',
+        views.ReviewUpdatePageView.as_view(),
+        name='review-update'
+    ),
+    path(
+        'review/<int:id>/delete/',
+        views.ReviewDeletePageView.as_view(),
+        name='review-delete'
+    ),
+    path(
+        'subscriptions/',
+        views.SubscriptionsPageView.as_view(),
+        name='subscriptions'
     ),
 ]

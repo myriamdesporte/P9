@@ -3,8 +3,8 @@
 <div class="card-container">
     <div class="card">
         <div class="card-content">
-            <h2 class="banner-title">Supprimer le ticket ?</h2>
-            <p>Êtes-vous sûr de vouloir supprimer le ticket <strong>{{ ticket.title }}</strong> ?</p>
+            <h2 class="banner-title">Supprimer la critique ?</h2>
+            <p>Êtes-vous sûr de vouloir supprimer votre critique de <strong>{{ review.ticket.title }}</strong> ? </p>
             <p>Cette action est irréversible.</p>
             <form method="post">
                 {% csrf_token %}

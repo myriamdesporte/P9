@@ -297,3 +297,59 @@ class ReviewCreatePageView(LoginRequiredMixin, View):
                 'form': form,
             }
         )
+
+
+class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = 'reviews/review_create.html'
+    login_url = 'authentication:login'
+
+    def get_object(self):
+        return get_object_or_404(Review, id=self.kwargs['id'])
+
+    def test_func(self):
+        review = self.get_object()
+        return review.user == self.request.user
+
+    def get(self, request, id):
+        review = self.get_object()
+        ticket = review.ticket
+        form = ReviewForm(instance=review)
+        return render(request, self.template_name,             {
+                'ticket': ticket,
+                'form': form,
+            })
+
+    def post(self, request, id):
+        review = self.get_object()
+        ticket = review.ticket
+        form = ReviewForm(request.POST, request.FILES, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('reviews:user-posts')
+        return render(request, self.template_name,             {
+                'ticket': ticket,
+                'form': form,
+            })
+
+
+class ReviewDeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = 'reviews/review_delete_confirm.html'
+    login_url = 'authentication:login'
+
+    def get_object(self):
+        return get_object_or_404(Review, id=self.kwargs['id'])
+
+    def test_func(self):
+        review = self.get_object()
+        return review.user == self.request.user
+
+    def get(self, request, id):
+        review = self.get_object()
+        return render(request, self.template_name, {'review': review})
+
+    def post(self, request, id):
+        review = self.get_object()
+        review.delete()
+        return redirect('reviews:user-posts')
+
+

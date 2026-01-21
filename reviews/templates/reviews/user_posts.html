@@ -82,8 +82,8 @@
                 {% endif %}
             </div>
             <div class="ticket-actions">
-                <a href="" class="btn">Modifier</a>
-                <a href="" class="btn">Supprimer</a>
+                <a href="{% url 'reviews:review-update' item.id %}" class="btn">Modifier</a>
+                <a href="{% url 'reviews:review-delete' item.id %}" class="btn">Supprimer</a>
             </div>
         </div>
     {% endif %}
