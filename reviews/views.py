@@ -351,5 +351,3 @@ class ReviewDeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
         review = self.get_object()
         review.delete()
         return redirect('reviews:user-posts')
-
-

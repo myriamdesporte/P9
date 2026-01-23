@@ -316,7 +316,7 @@ a.btn:active {
 }
 
 .subscriptions-messages .form-message {
-    color: #ab4a4a;
+    color: #2E5EAA;
 }
 
 .subscriptions-table {
@@ -358,11 +358,6 @@ a.btn:active {
 .subscription-follower {
     text-align: left;
     padding: 16px 8px ;
-}
-
-.subscription-message {
-    color: #ab4a4a;
-    margin-top: 10px;
 }
 
 .card-content .ticket-card {
