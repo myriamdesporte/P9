@@ -15,10 +15,7 @@
 
     <!-- TICKETS -->
     {% if item.content_type == 'TICKET' %}
-        {% include "reviews/snippets/ticket_snippet.html" with ticket=item show_review_button=item.show_review_button %}
-    {% endif %}
-
-    </div>
+        {% include "reviews/snippets/ticket_snippet.html" with ticket=item show_actions=False show_review_button=item.show_review_button %}
     {% endif %}
 
     <!-- REVIEWS -->

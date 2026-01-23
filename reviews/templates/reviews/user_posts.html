@@ -6,24 +6,7 @@
 {% for item in feed_items %}
     <!-- TICKETS -->
     {% if item.content_type == 'TICKET' %}
-        <div class="ticket-card">
-            <div class="ticket-header">
-                <p class="ticket-label">Vous avez publié un ticket</p>
-                <p class="ticket-date">{{ item.time_created|date:"H:i, d F Y" }}</p>
-            </div>
-
-            <p class="ticket-title">{{ item.title }}</p>
-            <p class="ticket-description">{{ item.description|linebreaksbr }}</p>
-
-            {% if item.image %}
-            <img src="{{ item.image.url }}" alt="image du ticket" class="ticket-image">
-            {% endif %}
-
-            <div class="ticket-actions">
-                <a href="{% url 'reviews:ticket-update' item.id %}" class="btn">Modifier</a>
-                <a href="{% url 'reviews:ticket-delete' item.id %}" class="btn">Supprimer</a>
-            </div>
-        </div>
+        {% include "reviews/snippets/ticket_snippet.html" with ticket=item show_actions=True show_review_button=item.show_review_button %}
     {% endif %}
 
     <!-- REVIEWS -->
