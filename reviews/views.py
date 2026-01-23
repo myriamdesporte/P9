@@ -68,6 +68,10 @@ class FeedPageView(LoginRequiredMixin, View):
             ticket.has_review = Review.objects.filter(
                 ticket=ticket
             ).exists()
+            ticket.show_review_button = (
+                    ticket.user != user
+                    and not ticket.has_review
+            )
 
         reviews = self.get_users_viewable_reviews(user)
         reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))

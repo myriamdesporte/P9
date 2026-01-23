@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="button-group">
     <a href="{% url 'reviews:ticket-create' %}">
         <button type="button" class="btn">Demander une critique</button>
@@ -14,42 +15,8 @@
 
     <!-- TICKETS -->
     {% if item.content_type == 'TICKET' %}
-    <div class="ticket-card">
-
-        <div class="ticket-header">
-            <p class="ticket-label">
-                {% if item.user == request.user %}
-                    Vous avez demandé une critique
-                {% else %}
-                    {{ item.user.username }} a demandé une critique
-                {% endif %}
-            </p>
-            <p class="ticket-date">
-                {{ item.time_created|date:"H:i, d F Y" }}
-            </p>
-        </div>
-
-        <p class="ticket-description">
-            {{ item.title|linebreaksbr }}
-        </p>
-
-        <p class="ticket-description">
-            {{ item.description|linebreaksbr }}
-        </p>
-
-        {% if item.image %}
-            <img src="{{ item.image.url }}" alt="image du ticket" class="ticket-image">
-        {% endif %}
-
-        {% if item.user != request.user and not item.has_review %}
-        <div class="ticket-actions">
-            <a href="{% url 'reviews:review-create' item.id %}">
-                <button type="button" class="btn">
-                    Créer une critique
-                </button>
-            </a>
-        </div>
-        {% endif %}
+        {% include "reviews/snippets/ticket_snippet.html" with ticket=item show_review_button=item.show_review_button %}
+    {% endif %}
 
     </div>
     {% endif %}
