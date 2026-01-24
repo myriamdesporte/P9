@@ -1,0 +1,40 @@
+<div>
+    <h3 class="banner-title">Critique</h3>
+
+    <p class="form-field">
+        <label>Titre</label>
+        {{ form.headline }}
+        {% for error in form.headline.errors %}
+            <p class="form-message">{{ error }}</p>
+        {% endfor %}
+    </p>
+
+    <p class="form-field">
+        <label>Note</label>
+        <div class="field-rating">
+        {% for radio in form.rating %}
+            <label>
+                {{ radio.tag }}
+                {{ radio.choice_label }}
+            </label>
+        {% endfor %}
+        </div>
+
+        {% for error in form.rating.errors %}
+            <p class="form-message">{{ error }}</p>
+        {% endfor %}
+    </p>
+
+    <p class="form-field">
+        <label>Commentaire</label>
+        {{ form.body }}
+        {% for error in form.body.errors %}
+            <p class="form-message">{{ error }}</p>
+        {% endfor %}
+    </p>
+
+    <!-- Submit button -->
+    <div class="form-submit">
+        <button type="submit" class="btn">Envoyer</button>
+    </div>
+</div>

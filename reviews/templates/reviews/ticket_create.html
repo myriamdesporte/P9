@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="card-container">
     <div class="card">
@@ -10,40 +11,7 @@
             <form method="post" enctype="multipart/form-data" class="form-card">
                 {% csrf_token %}
 
-                <p class="form-field">
-                    <label>Titre</label>
-                    {{ form.title }}
-                    {% for error in form.title.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <p class="form-field">
-                    <label>Description</label>
-                    {{ form.description }}
-                    {% for error in form.description.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <p class="form-field">
-                    <label>Image</label>
-
-                    {% if form.instance.image %}
-                    <div class="image-preview-container">
-                        <img src="{{ form.instance.image.url }}" alt="Image actuelle" class="ticket-image">
-                        <label class="checkbox-label">
-                            {{ form.image.clear_checkbox }}
-                        </label>
-                    </div>
-                    {% endif %}
-
-                    {{ form.image }}
-
-                    {% for error in form.image.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
+                {% include "reviews/snippets/ticket_form_snippet.html" with ticket_form=form %}
 
                 <div class="form-submit">
                     <button type="submit" class="btn">Envoyer</button>

@@ -14,80 +14,13 @@
 
                 <!-- Ticket section -->
                 <h3 class="banner-title">Livre/Article</h3>
-
-                <p class="form-field">
-                    <label>Titre</label>
-                    {{ ticket_form.title }}
-                    {% for error in ticket_form.title.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <p class="form-field">
-                    <label>Description</label>
-                    {{ ticket_form.description }}
-                    {% for error in ticket_form.description.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <p class="form-field">
-                    <label>Image</label>
-                    {% if ticket_form.instance.image %}
-                        <div class="image-preview-container">
-                            <img src="{{ ticket_form.instance.image.url }}" alt="Image actuelle" class="ticket-image">
-                            <label class="checkbox-label">
-                                {{ ticket_form.image.clear_checkbox }}
-                            </label>
-                        </div>
-                    {% endif %}
-                    {{ ticket_form.image }}
-                    {% for error in ticket_form.image.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
+                {% include "reviews/snippets/ticket_form_snippet.html" with ticket_form=ticket_form %}
 
                 <!-- Separation line -->
                 <hr class="section-separator">
 
                 <!-- Review section -->
-                <h3 class="banner-title">Critique</h3>
-
-                <p class="form-field">
-                    <label>Titre</label>
-                    {{ review_form.headline }}
-                    {% for error in review_form.headline.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <p class="form-field">
-                    <label>Note</label>
-                    <div class="field-rating">
-                        {% for radio in review_form.rating %}
-                            <label>
-                                {{ radio.tag }}
-                                {{ radio.choice_label }}
-                            </label>
-                        {% endfor %}
-                    </div>
-                    {% for error in review_form.rating.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <p class="form-field">
-                    <label>Commentaire</label>
-                    {{ review_form.body }}
-                    {% for error in review_form.body.errors %}
-                        <p class="form-message">{{ error }}</p>
-                    {% endfor %}
-                </p>
-
-                <!-- Submit button -->
-                <div class="form-submit">
-                    <button type="submit" class="btn">Envoyer</button>
-                </div>
+                {% include "reviews/snippets/review_form_snippet.html" with form=review_form %}
             </div>
         </div>
     </div>

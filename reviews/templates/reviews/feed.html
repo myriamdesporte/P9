@@ -15,13 +15,17 @@
 
     <!-- TICKETS -->
     {% if item.content_type == 'TICKET' %}
-        {% include "reviews/snippets/ticket_snippet.html" with ticket=item embedded=False show_actions=False show_review_button=item.show_review_button %}
+        {% include "reviews/snippets/ticket_card_snippet.html" with ticket=item embedded=False show_actions=False show_review_button=item.show_review_button %}
     {% endif %}
 
     <!-- REVIEWS -->
     {% if item.content_type == 'REVIEW' %}
-        {% include "reviews/snippets/review_snippet.html" with review=item show_actions=False %}
+        {% include "reviews/snippets/review_card_snippet.html" with review=item show_actions=False %}
     {% endif %}
+
+    <!-- EMPTY FEED -->
+    {% empty %}
+    <p class="card-content">Votre flux est vide pour le moment. Créez un ticket ou une critique pour commencer !</p>
 
 {% endfor %}
 
