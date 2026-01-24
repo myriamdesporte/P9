@@ -208,27 +208,6 @@ class TicketUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
-class TicketDeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
-    template_name = 'reviews/ticket_delete_confirm.html'
-    login_url = 'authentication:login'
-
-    def get_object(self):
-        return get_object_or_404(Ticket, id=self.kwargs['id'])
-
-    def test_func(self):
-        ticket = self.get_object()
-        return ticket.user == self.request.user
-
-    def get(self, request, id):
-        ticket = self.get_object()
-        return render(request, self.template_name, {'ticket': ticket})
-
-    def post(self, request, id):
-        ticket = self.get_object()
-        ticket.delete()
-        return redirect('reviews:user-posts')
-
-
 class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
     template_name = 'reviews/ticket_and_review_create.html'
     login_url = 'authentication:login'
@@ -336,22 +315,24 @@ class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
             })
 
 
-class ReviewDeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
-    template_name = 'reviews/review_delete_confirm.html'
+class DeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = 'reviews/delete_confirm.html'
     login_url = 'authentication:login'
+    model = None
 
     def get_object(self):
-        return get_object_or_404(Review, id=self.kwargs['id'])
+        return get_object_or_404(self.model, id=self.kwargs['id'])
 
     def test_func(self):
-        review = self.get_object()
-        return review.user == self.request.user
+        item = self.get_object()
+        return item.user == self.request.user
 
     def get(self, request, id):
-        review = self.get_object()
-        return render(request, self.template_name, {'review': review})
+        item = self.get_object()
+        item.object_type = item._meta.model_name
+        return render(request, self.template_name, {'item': item})
 
     def post(self, request, id):
-        review = self.get_object()
-        review.delete()
+        item = self.get_object()
+        item.delete()
         return redirect('reviews:user-posts')

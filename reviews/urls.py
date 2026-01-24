@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .models import Ticket, Review
 
 app_name = "reviews"
 
@@ -18,7 +19,7 @@ urlpatterns = [
     ),
     path(
         'ticket/<int:id>/delete/',
-        views.TicketDeletePageView.as_view(),
+        views.DeletePageView.as_view(model=Ticket),
         name='ticket-delete'
     ),
     path(
@@ -38,7 +39,7 @@ urlpatterns = [
     ),
     path(
         'review/<int:id>/delete/',
-        views.ReviewDeletePageView.as_view(),
+        views.DeletePageView.as_view(model=Review),
         name='review-delete'
     ),
     path(

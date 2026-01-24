@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <div class="card-content">
+            <h2 class="banner-title">
+                Supprimer
+                {% if item.object_type == "ticket" %}
+                    le ticket ?
+                {% else %}
+                    la critique ?
+                {% endif %}
+            </h2>
+
+            <p>
+                Êtes-vous sûr de vouloir supprimer
+                {% if item.object_type == "ticket" %}
+                    le ticket <strong> {{ item.title }}</strong> ?
+                {% else %}
+                    votre critique de <strong> {{ item.ticket.title }}</strong> ?
+                {% endif %}
+            </p>
+
+            <p>Cette action est irréversible.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="ticket-actions">
+                    <button type="submit" class="btn">Confirmer la suppression</button>
+                    <a href="{% url 'reviews:user-posts' %}" class="btn">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
