@@ -297,7 +297,7 @@ class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
         review = self.get_object()
         ticket = review.ticket
         form = ReviewForm(instance=review)
-        return render(request, self.template_name,             {
+        return render(request, self.template_name, {
                 'ticket': ticket,
                 'form': form,
             })

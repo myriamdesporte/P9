@@ -6,3 +6,5 @@ exclude =
     __pycache__,
     manage.py,
     settings.py
+format = html
+htmldir = flake8_report
