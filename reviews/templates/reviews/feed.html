@@ -15,66 +15,12 @@
 
     <!-- TICKETS -->
     {% if item.content_type == 'TICKET' %}
-        {% include "reviews/snippets/ticket_snippet.html" with ticket=item show_actions=False show_review_button=item.show_review_button %}
+        {% include "reviews/snippets/ticket_snippet.html" with ticket=item embedded=False show_actions=False show_review_button=item.show_review_button %}
     {% endif %}
 
     <!-- REVIEWS -->
     {% if item.content_type == 'REVIEW' %}
-    <div class="ticket-card">
-
-        <div class="ticket-header">
-            <p class="ticket-label">
-                {% if item.user == request.user %}
-                    Vous avez publié une critique
-                {% else %}
-                    {{ item.user.username }} a publié une critique
-                {% endif %}
-            </p>
-
-            <p class="ticket-date">
-                {{ item.time_created|date:"H:i, d F Y" }}
-            </p>
-        </div>
-
-        <p>
-            <strong>{{ item.headline }}</strong> -
-            {% for i in "12345"|make_list %}
-                {% if forloop.counter <= item.rating %}
-                    &#9733;
-                {% else %}
-                    &#9734;
-                {% endif %}
-            {% endfor %}
-        </p>
-
-        <p>{{ item.body }}</p>
-
-        <div class="ticket-card">
-            <div class="ticket-header">
-                <p class="ticket-label">
-                    Ticket –
-                    {% if item.ticket.user == request.user %}
-                        Vous
-                    {% else %}
-                        {{ item.ticket.user.username }}
-                    {% endif %}
-                </p>
-            </div>
-
-            <p class="ticket-description">
-                {{ item.ticket.title|linebreaksbr }}
-            </p>
-
-            <p class="ticket-description">
-                {{ item.ticket.description|linebreaksbr }}
-            </p>
-
-            {% if item.ticket.image %}
-                <img src="{{ item.ticket.image.url }}" alt="image du ticket" class="ticket-image">
-            {% endif %}
-
-        </div>
-    </div>
+        {% include "reviews/snippets/review_snippet.html" with review=item show_actions=False %}
     {% endif %}
 
 {% endfor %}

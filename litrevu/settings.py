@@ -112,12 +112,10 @@ LOGIN_REDIRECT_URL = 'home'
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'fr-fr'
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
+TIME_ZONE = 'Europe/Paris'
 USE_TZ = True
 
+USE_I18N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

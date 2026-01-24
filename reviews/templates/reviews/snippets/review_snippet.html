@@ -1,0 +1,37 @@
+<div class="ticket-card">
+    <div class="ticket-header">
+        <p class="ticket-label">
+            {% if review.user == request.user %}
+                Vous avez publié une critique
+            {% else %}
+                {{ review.user.username }} a publié une critique
+            {% endif %}
+        </p>
+
+        <p class="ticket-date">
+            {{ review.time_created|date:"H:i, d F Y" }}
+        </p>
+    </div>
+
+    <p>
+        <strong>{{ review.headline }}</strong> -
+        {% for i in "12345"|make_list %}
+            {% if forloop.counter <= review.rating %}
+                &#9733;
+            {% else %}
+                &#9734;
+            {% endif %}
+        {% endfor %}
+    </p>
+
+    <p>{{ review.body }}</p>
+
+    {% include "reviews/snippets/ticket_snippet.html" with ticket=review.ticket embedded=True show_actions=False show_review_button=False %}
+
+    {% if show_actions %}
+        <div class="ticket-actions">
+            <a href="{% url 'reviews:review-update' review.id %}" class="btn">Modifier</a>
+            <a href="{% url 'reviews:review-delete' review.id %}" class="btn">Supprimer</a>
+        </div>
+    {% endif %}
+</div>

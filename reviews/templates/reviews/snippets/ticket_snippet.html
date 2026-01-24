@@ -1,15 +1,27 @@
-<div class="ticket-card {% if embedded %}ticket-embedded{% endif %}">
+<div class="ticket-card">
     <div class="ticket-header">
         <p class="ticket-label">
-            {% if ticket.user == request.user %}
-                Vous avez demandé une critique
+            {% if embedded %}
+                Ticket –
+                {% if ticket.user == request.user %}
+                    Vous
+                {% else %}
+                    {{ ticket.user.username }}
+                {% endif %}
             {% else %}
-                {{ ticket.user.username }} a demandé une critique
+                {% if ticket.user == request.user %}
+                    Vous avez publié un ticket
+                {% else %}
+                    {{ ticket.user.username }} a demandé une critique
+                {% endif %}
             {% endif %}
         </p>
-        <p class="ticket-date">
-            {{ ticket.time_created|date:"H:i, d F Y" }}
-        </p>
+
+        {% if not embedded %}
+            <p class="ticket-date">
+                {{ ticket.time_created|date:"H:i, d F Y" }}
+            </p>
+        {% endif %}
     </div>
 
     <p class="ticket-description">
