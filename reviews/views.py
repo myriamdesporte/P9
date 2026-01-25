@@ -1,3 +1,8 @@
+"""
+Handle reviews app views.
+Handle feed display, user posts, subscriptions, tickets, and reviews.
+"""
+
 from itertools import chain
 from django.db.models import CharField, Value
 from django.contrib import messages
@@ -12,10 +17,13 @@ User = get_user_model()
 
 
 class FeedPageView(LoginRequiredMixin, View):
+    """Display the feed of tickets and reviews for the current user."""
+
     template_name = 'reviews/feed.html'
     login_url = 'authentication:login'
 
     def get_users_viewable_tickets(self, user):
+        """Return tickets the user can view, excluding self-reviews."""
         # User tickets
         tickets = Ticket.objects.filter(user=user)
 
@@ -41,6 +49,10 @@ class FeedPageView(LoginRequiredMixin, View):
         return tickets
 
     def get_users_viewable_reviews(self, user):
+        """
+        Return reviews the user can view, including followed users and
+        reviews on user's tickets.
+        """
         # User reviews
         reviews = Review.objects.filter(user=user)
 
@@ -59,6 +71,7 @@ class FeedPageView(LoginRequiredMixin, View):
         return reviews
 
     def get(self, request):
+        """Display the feed page with tickets and reviews."""
         user = request.user
 
         tickets = self.get_users_viewable_tickets(user)
@@ -86,10 +99,16 @@ class FeedPageView(LoginRequiredMixin, View):
 
 
 class UserPostsPageView(LoginRequiredMixin, View):
+    """Display the current user's tickets and reviews."""
+
     template_name = 'reviews/user_posts.html'
     login_url = 'authentication:login'
 
     def get(self, request):
+        """
+        Display the user's tickets and reviews in reverse
+        chronological order
+        """
         user_tickets = (Ticket.objects.filter(user=request.user))
         tickets = user_tickets.annotate(
             content_type=Value('TICKET', CharField())
@@ -109,16 +128,20 @@ class UserPostsPageView(LoginRequiredMixin, View):
 
 
 class SubscriptionsPageView(LoginRequiredMixin, View):
+    """Display and process user's followed users."""
+
     template_name = 'reviews/subscriptions.html'
     login_url = 'authentication:login'
 
     def get(self, request):
+        """Display the follow user form."""
         form = FollowUserForm()
         return render(request, self.template_name, {
             'form': form,
         })
 
     def post(self, request):
+        """Process follow and unfollow actions for other users."""
         if 'unfollow_user_id' in request.POST:
             user_id = request.POST.get('unfollow_user_id')
             try:
@@ -166,14 +189,18 @@ class SubscriptionsPageView(LoginRequiredMixin, View):
 
 
 class TicketCreatePageView(LoginRequiredMixin, View):
+    """Display and process the ticket creation form."""
+
     template_name = 'reviews/ticket_create.html'
     login_url = 'authentication:login'
 
     def get(self, request):
+        """Display an empty ticket form."""
         form = TicketForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
+        """Create a new ticket from form data and save it."""
         form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
             ticket = form.save(commit=False)
@@ -184,22 +211,28 @@ class TicketCreatePageView(LoginRequiredMixin, View):
 
 
 class TicketUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Display and process the ticket update form for ticket owner."""
+
     template_name = 'reviews/ticket_create.html'
     login_url = 'authentication:login'
 
     def get_object(self):
+        """Return the ticket to update."""
         return get_object_or_404(Ticket, id=self.kwargs['id'])
 
     def test_func(self):
+        """Return True if current user is the ticket owner."""
         ticket = self.get_object()
         return ticket.user == self.request.user
 
     def get(self, request, id):
+        """Display the ticket update form."""
         ticket = self.get_object()
         form = TicketForm(instance=ticket)
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, id):
+        """Update the ticket with form data."""
         ticket = self.get_object()
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
@@ -209,10 +242,13 @@ class TicketUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
 
 
 class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
+    """Display and process creation of a ticket and its review."""
+
     template_name = 'reviews/ticket_and_review_create.html'
     login_url = 'authentication:login'
 
     def get(self, request):
+        """Display empty ticket and review forms."""
         ticket_form = TicketForm()
         review_form = ReviewForm()
         return render(request, self.template_name, {
@@ -221,6 +257,7 @@ class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
         })
 
     def post(self, request):
+        """Create a ticket and review from form data and save both."""
         ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)
 
@@ -243,13 +280,17 @@ class TicketAndReviewCreatePageView(LoginRequiredMixin, View):
 
 
 class ReviewCreatePageView(LoginRequiredMixin, View):
+    """Display and process creation of a review for a ticket."""
+
     template_name = 'reviews/review_create.html'
     login_url = 'authentication:login'
 
     def get_ticket(self, id):
+        """Return the ticket for which to create the review."""
         return get_object_or_404(Ticket, id=id)
 
     def get(self, request, id):
+        """Display the review form for a ticket."""
         ticket = self.get_ticket(id)
         form = ReviewForm()
         return render(
@@ -262,6 +303,7 @@ class ReviewCreatePageView(LoginRequiredMixin, View):
         )
 
     def post(self, request, id):
+        """Create a review for a ticket from form data."""
         ticket = self.get_ticket(id)
         form = ReviewForm(request.POST, request.FILES)
 
@@ -283,17 +325,22 @@ class ReviewCreatePageView(LoginRequiredMixin, View):
 
 
 class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Display and process the review update form for review owner."""
+
     template_name = 'reviews/review_create.html'
     login_url = 'authentication:login'
 
     def get_object(self):
+        """Return the review to update."""
         return get_object_or_404(Review, id=self.kwargs['id'])
 
     def test_func(self):
+        """Return True if current user is the review owner."""
         review = self.get_object()
         return review.user == self.request.user
 
     def get(self, request, id):
+        """Display the review update form."""
         review = self.get_object()
         ticket = review.ticket
         form = ReviewForm(instance=review)
@@ -303,6 +350,7 @@ class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
             })
 
     def post(self, request, id):
+        """Update the review with form data."""
         review = self.get_object()
         ticket = review.ticket
         form = ReviewForm(request.POST, request.FILES, instance=review)
@@ -316,23 +364,29 @@ class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
 
 
 class DeletePageView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Display and process deletion of a ticket or review."""
+
     template_name = 'reviews/delete_confirm.html'
     login_url = 'authentication:login'
     model = None
 
     def get_object(self):
+        """Return the object to delete."""
         return get_object_or_404(self.model, id=self.kwargs['id'])
 
     def test_func(self):
+        """Return True if current user is the owner of the object."""
         item = self.get_object()
         return item.user == self.request.user
 
     def get(self, request, id):
+        """Display the deletion confirmation page."""
         item = self.get_object()
         item.object_type = item._meta.model_name
         return render(request, self.template_name, {'item': item})
 
     def post(self, request, id):
+        """Delete the object and redirect to user's posts."""
         item = self.get_object()
         item.delete()
         return redirect('reviews:user-posts')

@@ -1,3 +1,8 @@
+"""
+Handle forms for tickets, reviews, and following users.
+
+"""
+
 from django import forms
 from .models import Ticket, Review
 
