@@ -3,11 +3,11 @@
 {% block content %}
 
 <div class="button-group">
-    <a href="{% url 'reviews:ticket-create' %}">
-        <button type="button" class="btn">Demander une critique</button>
+    <a href="{% url 'reviews:ticket-create' %}" aria-label="Créer un ticket pour demander une critique" class="btn">
+        Demander une critique
     </a>
-    <a href="{% url 'reviews:ticket-and-review-create' %}">
-        <button type="button" class="btn">Créer une critique</button>
+    <a href="{% url 'reviews:ticket-and-review-create' %}" aria-label="Créer un ticket et une critique en une seule étape" class="btn">
+        Créer une critique
     </a>
 </div>
 

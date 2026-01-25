@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LITRevu</title>
+    <meta name="description" content="{% block meta_description %}Publiez des critiques de livres ou d’articles et consultez ou sollicitez une critique de livres à la demande{% endblock %}">
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 </head>
@@ -11,14 +12,14 @@
     <header class="top-banner">
         <div class="banner-content">
             <div class="banner-title-container">
-                <img src="{% static 'images/litrevu.png' %}" alt="Logo" class="banner-logo">
+                <img src="{% static 'images/litrevu.png' %}" alt="LogoLitRevu" title="LitRevu" class="banner-logo">
                 <h1 class="banner-title">LITRevu</h1>
             </div>
             {% if user.is_authenticated %}
             <nav class="banner-nav">
                 <ul>
                     <li><a href="{% url 'reviews:feed' %}">Flux</a></li>
-                    <li><a href="{% url 'reviews:user-posts' %}">Post</a></li>
+                    <li><a href="{% url 'reviews:user-posts' %}">Posts</a></li>
                     <li><a href="{% url 'reviews:subscriptions' %}">Abonnements</a></li>
                     <li><a href="{% url 'authentication:logout' %}">Se déconnecter</a></li>
                 </ul>

@@ -24,7 +24,7 @@
         {% endif %}
     </div>
 
-    <p class="ticket-description">
+    <p class="ticket-title">
         {{ ticket.title|linebreaksbr }}
     </p>
 
@@ -33,12 +33,12 @@
     </p>
 
     {% if ticket.image %}
-        <img src="{{ ticket.image.url }}" alt="image du ticket" class="ticket-image">
+        <img src="{{ ticket.image.url }}" alt="Image du ticket {{ ticket.title }}" title="Image du ticket {{ ticket.title }}" class="ticket-image">
     {% endif %}
 
     {% if show_review_button %}
         <div class="ticket-actions">
-            <a href="{% url 'reviews:review-create' ticket.id %}" class="btn">
+            <a href="{% url 'reviews:review-create' ticket.id %}" aria-label="Créer une critique de {{ ticket.title }}"  class="btn">
                 Créer une critique
             </a>
         </div>

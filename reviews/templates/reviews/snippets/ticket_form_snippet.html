@@ -1,31 +1,37 @@
 <div>
     <p class="form-field">
-        <label>Titre</label>
-        {{ ticket_form.title }}
+        <label>
+            Titre
+            {{ ticket_form.title }}
+         </label>
         {% for error in ticket_form.title.errors %}
             <p class="form-message">{{ error }}</p>
         {% endfor %}
     </p>
 
     <p class="form-field">
-        <label>Description</label>
-        {{ ticket_form.description }}
+        <label>
+            Description
+            {{ ticket_form.description }}
+         </label>
         {% for error in ticket_form.description.errors %}
             <p class="form-message">{{ error }}</p>
         {% endfor %}
     </p>
 
     <p class="form-field">
-        <label>Image</label>
-        {% if ticket_form.instance.image %}
+        <label>
+            Image
+            {% if ticket_form.instance.image %}
             <div class="image-preview-container">
                 <img src="{{ ticket_form.instance.image.url }}" alt="Image actuelle" class="ticket-image">
                 <label class="checkbox-label">
                     {{ ticket_form.image.clear_checkbox }}
                 </label>
             </div>
-        {% endif %}
+            {% endif %}
         {{ ticket_form.image }}
+        </label>
         {% for error in ticket_form.image.errors %}
             <p class="form-message">{{ error }}</p>
         {% endfor %}

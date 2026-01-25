@@ -2,23 +2,27 @@
     <h3 class="banner-title">Critique</h3>
 
     <p class="form-field">
-        <label>Titre</label>
-        {{ form.headline }}
+        <label>
+            Titre
+            {{ form.headline }}
+        </label>
         {% for error in form.headline.errors %}
             <p class="form-message">{{ error }}</p>
         {% endfor %}
     </p>
 
     <p class="form-field">
-        <label>Note</label>
-        <div class="field-rating">
-        {% for radio in form.rating %}
-            <label>
-                {{ radio.tag }}
-                {{ radio.choice_label }}
+        <label>
+            Note
+            <div class="field-rating">
+                {% for radio in form.rating %}
+                    <label>
+                        {{ radio.tag }}
+                        {{ radio.choice_label }}
+                    </label>
+                {% endfor %}
+            </div>
             </label>
-        {% endfor %}
-        </div>
 
         {% for error in form.rating.errors %}
             <p class="form-message">{{ error }}</p>
@@ -26,8 +30,10 @@
     </p>
 
     <p class="form-field">
-        <label>Commentaire</label>
-        {{ form.body }}
+        <label>
+            Commentaire
+            {{ form.body }}
+        </label>
         {% for error in form.body.errors %}
             <p class="form-message">{{ error }}</p>
         {% endfor %}

@@ -309,7 +309,7 @@ class ReviewUpdatePageView(LoginRequiredMixin, UserPassesTestMixin, View):
         if form.is_valid():
             form.save()
             return redirect('reviews:user-posts')
-        return render(request, self.template_name,             {
+        return render(request, self.template_name, {
                 'ticket': ticket,
                 'form': form,
             })
