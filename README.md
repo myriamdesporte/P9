@@ -132,3 +132,17 @@ Ce projet utilise `flake8` pour vérifier la conformité du code à la norme **P
 
 Un rapport HTML est généré automatiquement à chaque exécution de la commande `flake8 .` et disponible 
 dans le dossier `flake8_report/`.
+
+---
+
+## 🔒 Sécurité et données sensibles
+
+### Secrets et mode debug
+
+La `SECRET_KEY` et le paramètre `DEBUG` sont stockés dans un fichier `.env` local, **non versionné**, et chargés via [`python-dotenv`](https://pypi.org/project/python-dotenv/). 
+
+En production, il faut toujours mettre `DEBUG = False` et configurer correctement `ALLOWED_HOSTS` afin d’éviter toute fuite d’informations et l’affichage de pages d’erreur détaillées.
+
+### Base de données
+
+La base de données est incluse dans le dépôt **uniquement à titre de démonstration** et contient des **données factices**. Aucune information sensible n’y est stockée.
