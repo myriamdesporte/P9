@@ -137,12 +137,38 @@ dans le dossier `flake8_report/`.
 
 ## 🔒 Sécurité et données sensibles
 
-### Secrets et mode debug
+Les informations sensibles du projet (`SECRET_KEY`, `DEBUG`) ne sont **pas stockées dans le code source**.
 
-La `SECRET_KEY` et le paramètre `DEBUG` sont stockés dans un fichier `.env` local, **non versionné**, et chargés via [`python-dotenv`](https://pypi.org/project/python-dotenv/). 
+Elles sont définies dans un fichier `.env` local, **non versionné**, chargé automatiquement
+au démarrage du projet à l’aide de la bibliothèque
+[`python-dotenv`](https://pypi.org/project/python-dotenv/).
 
-En production, il faut toujours mettre `DEBUG = False` et configurer correctement `ALLOWED_HOSTS` afin d’éviter toute fuite d’informations et l’affichage de pages d’erreur détaillées.
+### Configuration du fichier `.env`
+
+À la racine du projet, créez un fichier `.env` contenant :
+
+```
+SECRET_KEY=django-insecure-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DEBUG=True
+```
+
+### Génération d’une `SECRET_KEY`
+
+Pour générer une clé secrète Django valide :
+
+```
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Copiez la clé générée et remplacez la valeur de `SECRET_KEY` dans le fichier `.env`.
+
+> ⚠️ **Bonnes pratiques**
+> - Ne partagez jamais votre `SECRET_KEY`
+> - Ne la committez jamais dans Git
+> - Chaque environnement doit utiliser sa propre clé
+> - En production, `DEBUG` doit être défini à `False`
 
 ### Base de données
 
-La base de données est incluse dans le dépôt **uniquement à titre de démonstration** et contient des **données factices**. Aucune information sensible n’y est stockée.
+La base de données incluse dans le dépôt l’est **uniquement à titre de démonstration** et
+contient des **données factices**. Aucune information sensible n’y est stockée.
